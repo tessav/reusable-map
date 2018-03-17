@@ -1,5 +1,8 @@
 # Reusable Map Visualization Tool
 
-View the map at https://tessav.github.io/reusable-map/
-<br>
-TBC
+View the map: https://tessav.github.io/reusable-map/
+
+### OSM Data Types
+1. Buildings (Point)
+2. Roads (Line)
+3. Landuse (Polygon)
