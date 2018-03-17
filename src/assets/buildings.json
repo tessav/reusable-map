@@ -1,0 +1,35 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -149.8857,
+          61.2161149
+        ]
+      },
+      "properties": {
+        "title": "Anchorage Museum",
+        "icon": "building",
+        "description": "Alaskan artifacts & artworks, plus a kid-friendly, hands-on science center & planetarium."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -149.8293,
+          61.2102
+        ]
+      },
+      "properties": {
+        "title": "Alaska Regional Hospital",
+        "icon": "building",
+        "description": "Hospital and ER in Anchorage, AK providing high quality medical care including emergency care, cancer care, neurology, surgery, OB/GYN and orthopedics."
+      }
+    }
+  ]
+}
