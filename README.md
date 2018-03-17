@@ -7,5 +7,5 @@ View the map: https://tessav.github.io/reusable-map/
 2. Roads (Line)
 3. Landuse (Polygon)
 
-## Ideas
+## Config Tool Plan
 TBC
