@@ -23,13 +23,11 @@ body {
 }
 
 .map-overlay {
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font: 12px/20px 'Open Sans', Arial, Helvetica, sans-serif;
     position: absolute;
-    width: 25%;
-    top: 250px;
-    left: 500px;
-    bottom: 0;
-    padding: 10px;
+    top:10px;
+    right:70px;
+    width: 200px;
 }
 
 .map-overlay .map-overlay-inner {
@@ -44,4 +42,24 @@ body {
     line-height: 24px;
     display: block;
     margin: 0 0 10px;
+}
+
+.area-stats {
+  color: #088;
+}
+
+.features-stats {
+  color: red;
+}
+
+.stretch-height {
+  height: 100vh;
+}
+
+.title {
+  font-size: 17px;
+}
+
+.break {
+  background-color: #e7e7e7;
 }
