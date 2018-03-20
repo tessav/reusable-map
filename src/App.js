@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import './App.css';
 import buildingSVG from './assets/icons/marker-15.svg';
 import mapboxgl from 'mapbox-gl';
-import buildings from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_point_points.json';
-import landuse from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_polygon_polygons.json';
-import roads from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_line_lines.json';
-import clipbox from './assets/clipping_boundary.json';
+//import buildings from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_point_points.json';
+//import landuse from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_polygon_polygons.json';
+//import roads from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_line_lines.json';
+import buildings from './assets/points.geojson';
+import roads from './assets/lines.geojson';
+import landuse from './assets/multipolygons.geojson';
+import clipbox from './assets/boundary.geojson';
 mapboxgl.accessToken = 'pk.eyJ1IjoidGVzc2F2MyIsImEiOiJjamRtcGpyOHUwMG13MzJwcW1wazN2a2dnIn0.aSD27NA7KzGc0p8PmhT4Sg';
 
 class App extends Component {
@@ -15,14 +18,17 @@ class App extends Component {
     buildings: true,
     landuse: true,
     roads: true,
-    keyInfo: true
+    keyInfo: true,
+    healthcare: true,
+    emergency: true,
+    education: true
   }
 
   componentDidMount() {
     this.map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v9',
-      center: [91.9509773, 22.4285309],
+      center: [103.9198, 1.3331],
       zoom: 12
     });
     this.addIconImage('building', buildingSVG);
@@ -39,7 +45,7 @@ class App extends Component {
         {key: 'buildings', data: buildings}
       ];
       sources.map((s) => {
-        this.map.addSource(s.key, {
+        return this.map.addSource(s.key, {
           type: 'geojson',
           data: s.data
         });
@@ -107,19 +113,31 @@ class App extends Component {
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
-      const presentProps = Object.keys(properties).filter((key) => (properties[key] && key !== 'z_index'));
+      const presentProps = Object.keys(properties).filter(
+        (key) => (this.checkValidFeature(properties, key)));
       let html = presentProps.map((key) => {
           return key + " : " + properties[key] + "<br /> ";
         });
       this.popup.setLngLat(coordinates)
           .setHTML(html.join(""))
           .addTo(this.map);
-  }
+  };
+
+  checkValidFeature = (p, key) => {
+    const invalidKeys = ['fid', 'z_index', 'geom'];
+    return p[key] !== 'null' &&
+      invalidKeys.map((k) => k !== key)
+        .reduce((k1,k2) => k1 && k2);
+  };
 
   handleCheckboxChange = (e) => {
     this.setState({[e.target.value]: !this.state[e.target.value]});
     this.map.setLayoutProperty(e.target.value, 'visibility',
       e.target.checked ? 'visible' : 'none');
+  };
+
+  handleFeatureChange = (e) => {
+
   };
 
   handleOverlayChange = (e) => {
@@ -147,7 +165,7 @@ class App extends Component {
           <h3>Filter by layers:</h3><br />
           <input type="checkbox" value="buildings"
             checked={this.state.buildings}
-            onChange={this.handleCheckboxChange}/> Buildings<br/>
+            disabled /> Buildings<br/>
           <input type="checkbox" value="landuse"
             checked={this.state.landuse}
             onChange={this.handleCheckboxChange} /> Landuse<br/>
@@ -155,10 +173,21 @@ class App extends Component {
             checked={this.state.roads}
             onChange={this.handleCheckboxChange} /> Roads<br/>
           <br /><br />
+          <h3>Filter by features:</h3><br />
+          <input type="checkbox" value="healthcare"
+            onChange={this.handleFeatureChange}
+            checked={this.state.healthcare} /> Healthcare<br/>
+          <input type="checkbox" value="emergency"
+            onChange={this.handleFeatureChange}
+            checked={this.state.emergency} /> Emergency<br/>
+          <input type="checkbox" value="education"
+            onChange={this.handleFeatureChange}
+            checked={this.state.education} /> Education<br/>
+          <br /><br />
           <h3>Display:</h3><br />
           <input type="checkbox" value="keyInfo"
-          checked={this.state.keyInfo}
-          onChange={this.handleOverlayChange} /> Key Info<br/>
+            checked={this.state.keyInfo}
+            onChange={this.handleOverlayChange} /> Key Info<br/>
         </div>
       </div>
     );
