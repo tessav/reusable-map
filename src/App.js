@@ -5,9 +5,6 @@ import educationSVG from './assets/icons-used/school-15.svg';
 import healthcareSVG from './assets/icons-used/doctor-15.svg';
 import policeSVG from './assets/icons-used/police-15.svg';
 import mapboxgl from 'mapbox-gl';
-//import buildings from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_point_points.json';
-//import landuse from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_polygon_polygons.json';
-//import roads from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_line_lines.json';
 import buildings from './assets/points.json';
 import roads from './assets/lines.geojson';
 import landuse from './assets/multipolygons.geojson';
@@ -94,10 +91,9 @@ class App extends Component {
       buildings.features.forEach((f) => {
         if (f.properties.amenity) {
           let cat = categories[f.properties.amenity];
-          let layerID = 'poi-' + cat;
-          if (!this.map.getLayer(layerID)) {
+          if (!this.map.getLayer(cat)) {
             this.map.addLayer({
-              id: layerID,
+              id: cat,
               type: 'symbol',
               source: 'buildings',
               layout: {
@@ -106,7 +102,7 @@ class App extends Component {
               },
               "filter": ["==", "amenity", f.properties.amenity]
             }, 'country-label-lg');
-            this.map.on('click', layerID, this.updatePopup);
+            this.map.on('click', cat, this.updatePopup);
           }
         }
       });
@@ -172,7 +168,7 @@ class App extends Component {
               <div className='bar'></div>
               <div>
                 <span className="area-stats">20%</span> Areas Covered<br />
-                <span className="features-stats">3</span> Features Collected
+                <span className="features-stats">4</span> Features Collected
               </div>
             </div>
           </div>
@@ -193,16 +189,16 @@ class App extends Component {
           <br /><br />
           <h3>Filter by features:</h3><br />
           <input type="checkbox" value="healthcare"
-            onChange={this.handleFeatureChange}
+            onChange={this.handleCheckboxChange}
             checked={this.state.healthcare} /> Healthcare<br/>
           <input type="checkbox" value="education"
-            onChange={this.handleFeatureChange}
+            onChange={this.handleCheckboxChange}
             checked={this.state.education} /> Education<br/>
           <input type="checkbox" value="toilets"
-            onChange={this.handleFeatureChange}
+            onChange={this.handleCheckboxChange}
             checked={this.state.toilets} /> Toilets<br/>
           <input type="checkbox" value="police"
-            onChange={this.handleFeatureChange}
+            onChange={this.handleCheckboxChange}
             checked={this.state.police} /> Police<br/>
           <br /><br />
           <h3>Display:</h3><br />
