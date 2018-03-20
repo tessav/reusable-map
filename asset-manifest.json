@@ -1,7 +1,13 @@
 {
   "main.css": "static/css/main.262cceae.css",
   "main.css.map": "static/css/main.262cceae.css.map",
-  "main.js": "static/js/main.6bda62f9.js",
-  "main.js.map": "static/js/main.6bda62f9.js.map",
-  "static/media/marker-15.svg": "static/media/marker-15.93b67148.svg"
+  "main.js": "static/js/main.619c9e70.js",
+  "main.js.map": "static/js/main.619c9e70.js.map",
+  "static/media/boundary.geojson": "static/media/boundary.7e6db0b8.geojson",
+  "static/media/doctor-15.svg": "static/media/doctor-15.bea4fea6.svg",
+  "static/media/lines.geojson": "static/media/lines.60848254.geojson",
+  "static/media/multipolygons.geojson": "static/media/multipolygons.bda79658.geojson",
+  "static/media/police-15.svg": "static/media/police-15.48bdaea0.svg",
+  "static/media/school-15.svg": "static/media/school-15.24e40eb6.svg",
+  "static/media/toilet-15.svg": "static/media/toilet-15.89e333d1.svg"
 }
