@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import './App.css';
-import buildingSVG from './assets/icons/marker-15.svg';
+import toiletsSVG from './assets/icons-used/toilet-15.svg';
+import educationSVG from './assets/icons-used/school-15.svg';
+import healthcareSVG from './assets/icons-used/doctor-15.svg';
+import policeSVG from './assets/icons-used/police-15.svg';
 import mapboxgl from 'mapbox-gl';
 //import buildings from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_point_points.json';
 //import landuse from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_polygon_polygons.json';
 //import roads from './assets/2017-south-asian-floods-boalkhali-chittagong-bangladesh_planet_osm_line_lines.json';
-import buildings from './assets/points.geojson';
+import buildings from './assets/points.json';
 import roads from './assets/lines.geojson';
 import landuse from './assets/multipolygons.geojson';
 import clipbox from './assets/boundary.geojson';
+import categories from './assets/category_mapping.json';
 mapboxgl.accessToken = 'pk.eyJ1IjoidGVzc2F2MyIsImEiOiJjamRtcGpyOHUwMG13MzJwcW1wazN2a2dnIn0.aSD27NA7KzGc0p8PmhT4Sg';
 
 class App extends Component {
@@ -20,8 +24,10 @@ class App extends Component {
     roads: true,
     keyInfo: true,
     healthcare: true,
-    emergency: true,
-    education: true
+    toilets: true,
+    police: true,
+    education: true,
+    others: true
   }
 
   componentDidMount() {
@@ -31,7 +37,10 @@ class App extends Component {
       center: [103.9198, 1.3331],
       zoom: 12
     });
-    this.addIconImage('building', buildingSVG);
+    this.addIconImage('healthcare', healthcareSVG);
+    this.addIconImage('toilets', toiletsSVG);
+    this.addIconImage('education', educationSVG);
+    this.addIconImage('police', policeSVG);
     this.popup = new mapboxgl.Popup({
         closeButton: false,
         closeOnClick: false
@@ -44,8 +53,8 @@ class App extends Component {
         {key: 'roads', data: roads},
         {key: 'buildings', data: buildings}
       ];
-      sources.map((s) => {
-        return this.map.addSource(s.key, {
+      sources.forEach((s) => {
+        this.map.addSource(s.key, {
           type: 'geojson',
           data: s.data
         });
@@ -82,23 +91,32 @@ class App extends Component {
             "line-width": 5
         }
       });
-      this.map.addLayer({
-        id: 'buildings',
-        type: 'symbol',
-        source: 'buildings',
-        layout: {
-          "icon-image": "building",
-          "icon-allow-overlap": true,
-          "text-field": "{properties}",
-          "text-font": ["Open Sans Semibold"],
-          "text-offset": [0, 0.7],
-          "text-anchor": "top"
+      buildings.features.forEach((f) => {
+        if (f.properties.amenity) {
+          let cat = categories[f.properties.amenity];
+          let layerID = 'poi-' + cat;
+          if (!this.map.getLayer(layerID)) {
+            this.map.addLayer({
+              id: layerID,
+              type: 'symbol',
+              source: 'buildings',
+              layout: {
+                "icon-image": cat,
+                "icon-allow-overlap": false
+              },
+              "filter": ["==", "amenity", f.properties.amenity]
+            }, 'country-label-lg');
+            this.map.on('click', layerID, this.updatePopup);
+          }
         }
-      }, 'country-label-lg');
+      });
     });
     this.map.addControl(new mapboxgl.NavigationControl());
-    this.map.on('click', 'buildings', this.updatePopup);
   }
+
+  addFeatureLayer = () => {
+    // for each icon
+  };
 
   addIconImage(name, iconSVG) {
     let img = new Image(20,20);
@@ -153,8 +171,8 @@ class App extends Component {
             <div id='legend' className='legend'>
               <div className='bar'></div>
               <div>
-                <span className="area-stats">30%</span> Areas Covered<br />
-                <span className="features-stats">4</span> Features Collected
+                <span className="area-stats">20%</span> Areas Covered<br />
+                <span className="features-stats">3</span> Features Collected
               </div>
             </div>
           </div>
@@ -162,7 +180,7 @@ class App extends Component {
         <div className='col3 pad2 colored pin-left stretch-height'>
           <h3 className="title">Field Data Map Tool</h3>
           <hr className="break" /><br />
-          <h3>Filter by layers:</h3><br />
+          <h3>Filter by source:</h3><br />
           <input type="checkbox" value="buildings"
             checked={this.state.buildings}
             disabled /> Buildings<br/>
@@ -177,12 +195,15 @@ class App extends Component {
           <input type="checkbox" value="healthcare"
             onChange={this.handleFeatureChange}
             checked={this.state.healthcare} /> Healthcare<br/>
-          <input type="checkbox" value="emergency"
-            onChange={this.handleFeatureChange}
-            checked={this.state.emergency} /> Emergency<br/>
           <input type="checkbox" value="education"
             onChange={this.handleFeatureChange}
             checked={this.state.education} /> Education<br/>
+          <input type="checkbox" value="toilets"
+            onChange={this.handleFeatureChange}
+            checked={this.state.toilets} /> Toilets<br/>
+          <input type="checkbox" value="police"
+            onChange={this.handleFeatureChange}
+            checked={this.state.police} /> Police<br/>
           <br /><br />
           <h3>Display:</h3><br />
           <input type="checkbox" value="keyInfo"

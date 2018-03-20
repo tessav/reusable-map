@@ -1,0 +1,12 @@
+{
+  "toilets": "toilets",
+  "police": "police",
+  "clinic": "healthcare",
+  "doctors": "healthcare",
+  "pharmacy": "healthcare",
+  "dentist": "healthcare",
+  "hospital": "healthcare",
+  "school": "education",
+  "college": "education",
+  "kindergarten": "education"
+}
